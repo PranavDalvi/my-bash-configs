@@ -1,0 +1,14 @@
+# User Defined Aliases
+
+# Update system + packages from various distributions like snap and flatpak
+alias sysupdate='flatpak update && sudo snap refresh && sudo apt update && sudo apt upgrade'
+
+# XAMPP Aliases
+alias xampp-gui='sudo /opt/lampp/manager-linux-x64.run'
+alias xampp='sudo /opt/lampp/lampp'
+
+# emacs Aliases
+alias emacs-cli='emacs --no-window-system'
+
+# Checks if code or codium is installed and if installed then launch in CWD
+alias code='which code >/dev/null 2>&1 && code . && exit || which codium >/dev/null 2>&1 && codium . && exit || echo "Neither code nor codium is installed."'
