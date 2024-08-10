@@ -1,7 +1,16 @@
 # User Defined Aliases
 
-# Update system + packages from various distributions like snap and flatpak
-alias sysupdate='flatpak update && sudo snap refresh && sudo apt update && sudo apt upgrade'
+# Get distro name
+. /etc/os-release
+
+if [ "$ID" = "ubuntu" ]; then
+    # Update system + packages from various distributions like snap and flatpak
+    alias sysupdate='flatpak update && sudo snap refresh && sudo apt update && sudo apt upgrade'
+elif [ "$ID" = "fedora" ]; then
+    alias sysupdate="sudo dnf update && flatpak update"
+else
+    echo "Unsupported distribution: $ID"
+fi
 
 # XAMPP Aliases
 alias xampp-gui='sudo /opt/lampp/manager-linux-x64.run'
