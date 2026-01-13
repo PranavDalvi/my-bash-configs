@@ -1,23 +1,90 @@
-# User Defined Aliases
+# Only load for interactive shells
+[[ $- != *i* ]] && return
 
-# Get distro name
-. /etc/os-release
+# Prevent double-loading
+[[ -n "$BASHRC_CUSTOM_LOADED" ]] && return
+export BASHRC_CUSTOM_LOADED=1
 
-if [ "$ID" = "ubuntu" ]; then
-    # Update system + packages from various distributions like snap and flatpak
-    alias sysupdate='flatpak update && sudo snap refresh && sudo apt update && sudo apt upgrade'
-elif [ "$ID" = "fedora" ]; then
-    alias sysupdate="sudo dnf update && flatpak update"
+# -------------------------
+# Distro detection
+# -------------------------
+if [[ -r /etc/os-release ]]; then
+    . /etc/os-release
 else
-    echo "Unsupported distribution: $ID"
+    ID="unknown"
 fi
 
-# XAMPP Aliases
+# -------------------------
+# System update aliases
+# -------------------------
+case "$ID" in
+    ubuntu)
+        alias sysupdate='flatpak update && sudo snap refresh && sudo apt update && sudo apt upgrade'
+        ;;
+    fedora)
+        alias sysupdate='sudo dnf update -y && flatpak update'
+        ;;
+    *)
+        # silently ignore unsupported distros
+        ;;
+esac
+
+# -------------------------
+# XAMPP aliases
+# -------------------------
 alias xampp-gui='sudo /opt/lampp/manager-linux-x64.run'
 alias xampp='sudo /opt/lampp/lampp'
 
-# emacs Aliases
+# -------------------------
+# Emacs
+# -------------------------
 alias emacs-cli='emacs --no-window-system'
 
-# Checks if code or codium is installed and if installed then launch in CWD
-alias code='which code >/dev/null 2>&1 && code . && exit || which codium >/dev/null 2>&1 && codium . && exit || echo "Neither code nor codium is installed."'
+# -------------------------
+# VS Code / Codium launcher
+# -------------------------
+code() {
+    if command -v code >/dev/null 2>&1; then
+        command code .
+    elif command -v codium >/dev/null 2>&1; then
+        codium .
+    else
+        echo "Neither code nor codium is installed."
+        return 1
+    fi
+}
+
+# -------------------------
+# Mongodb
+# -------------------------
+mongo-on(){
+    echo "Unmasking Mongodb"
+    sudo systemctl unmask mongod
+
+    echo "Starting Mongodb"
+    sudo systemctl start mongod
+
+    if systemctl is-active --quiet mongod; then
+        echo "Mongodb is running"
+    else
+        echo "Mongodb failed to start"
+    fi
+}
+
+mongo-off(){
+    echo "Stopping Mongodb"
+    sudo systemctl stop mongod
+
+    echo "Masking Mongodb"
+    sudo systemctl mask mongod
+
+    if systemctl is-enabled mongod 2>/dev/null | grep -q masked; then
+        echo "Mongodb is masked"
+    else
+        echo "Mongodb mask failed"
+    fi
+}
+
+mongo-status() {
+  systemctl status mongod --no-pager
+}
