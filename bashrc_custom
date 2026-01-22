@@ -57,7 +57,7 @@ code() {
 # -------------------------
 # Mongodb
 # -------------------------
-mongo-on(){
+mongo-start(){
     echo "Unmasking Mongodb"
     sudo systemctl unmask mongod
 
@@ -71,7 +71,7 @@ mongo-on(){
     fi
 }
 
-mongo-off(){
+mongo-stop(){
     echo "Stopping Mongodb"
     sudo systemctl stop mongod
 
@@ -88,3 +88,41 @@ mongo-off(){
 mongo-status() {
   systemctl status mongod --no-pager
 }
+
+# -------------------------
+# PostgreSQL
+# -------------------------
+postgre-start(){
+    echo "Unmasking PostgreSQL"
+    sudo systemctl unmask postgresql
+
+    echo "Starting PostgreSQL"
+    sudo systemctl start postgresql
+
+    if systemctl is-active --quiet postgresql; then
+        echo "PostgreSQL is running"
+    else
+        echo "PostgreSQL failed to start"
+    fi
+}
+
+postgre-stop(){
+    echo "Stopping PostgreSQL"
+    sudo systemctl stop postgresql
+
+    echo "Masking PostgreSQL"
+    sudo systemctl mask postgresql
+
+    if systemctl is-enabled postgresql 2>/dev/null | grep -q masked; then
+        echo "PostgreSQL is masked"
+    else
+        echo "PostgreSQL mask failed"
+    fi
+}
+
+postgre-status(){
+    systemctl status postgresql --no-pager
+}
+
+alias phial-start="./phial-control.sh start"
+alias phial-stop="./phial-control.sh stop"
