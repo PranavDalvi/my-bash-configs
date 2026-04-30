@@ -124,5 +124,32 @@ postgre-status(){
     systemctl status postgresql --no-pager
 }
 
-alias phial-start="./phial-control.sh start"
-alias phial-stop="./phial-control.sh stop"
+# -------------------------
+# MariaDB
+# -------------------------
+maria-start(){
+    sudo systemctl start mariadb
+}
+
+maria-stop(){
+    sudo systemctl stop mariadb
+}
+# -------------------------
+# Phial-Project
+# -------------------------
+alias phial-start=" ~/my-bash-configs/phial-control.sh start"
+alias phial-stop="~/my-bash-configs/phial-control.sh stop"
+
+# -------------------------
+# React Native
+# -------------------------
+export ANDROID_HOME=$HOME/Android/Sdk
+export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+export PATH=$JAVA_HOME/bin:$PATH
