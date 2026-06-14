@@ -19,7 +19,7 @@ fi
 # -------------------------
 case "$ID" in
     ubuntu)
-        alias sysupdate='flatpak update && sudo snap refresh && sudo apt update && sudo apt upgrade'
+        alias sysupdate='sudo apt update && sudo apt upgrade -y && sudo snap refresh && flatpak update -y'
         ;;
     fedora)
         alias sysupdate='sudo dnf update -y && flatpak update'
@@ -151,5 +151,5 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
